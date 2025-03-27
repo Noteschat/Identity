@@ -73,10 +73,14 @@ namespace Identity.Controllers
         public async Task<dynamic> valid()
         {
             var Result = await _sessions.getUserFromRequest(Request);
-            return Result.Match(
+            return Result.Match<IActionResult>(
                 user =>
                 {
-                    return StatusCode(200);
+                    return StatusCode(200, new UserResponseBody
+                    {
+                        Id = user.Id,
+                        Name = user.Name
+                    });
                 },
                 error =>
                 {
