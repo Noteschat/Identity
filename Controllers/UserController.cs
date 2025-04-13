@@ -9,13 +9,11 @@ namespace Identity.Controllers
     [Route("/api/[controller]")]
     public class UserController : Controller
     {
-        private readonly ILogger<UserController> _logger;
         private readonly UserManager _users;
         private readonly SessionManager _sessions;
 
-        public UserController(ILogger<UserController> logger, UserManager userManager, SessionManager sessions)
+        public UserController(UserManager userManager, SessionManager sessions)
         {
-            _logger = logger;
             _users = userManager;
             _sessions = sessions;
         }
@@ -133,7 +131,7 @@ namespace Identity.Controllers
         public async Task<dynamic> DeleteCurrent()
         {
             var res = await _sessions.getUserFromRequest(Request);
-            return res.Match<IActionResult>(
+            return await res.Match<ActionResult>(
                 async (user) =>
                 {
                     var result = await _users.DeleteOne(user.Id);
