@@ -1,6 +1,17 @@
-@Identity_HostAddress = http://localhost:5213
+###
+POST http://localhost/api/identity/user
+Content-Type: application/json
 
-GET {{Identity_HostAddress}}/weatherforecast/
-Accept: application/json
+{
+    "name": "Admin",
+    "password": "adminPassword"
+}
 
 ###
+POST http://localhost/api/identity/login
+Content-Type: application/json
+
+{
+    "name": "Admin",
+    "password": "adminPassword"
+}
