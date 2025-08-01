@@ -14,7 +14,7 @@ namespace Identity.Managers
             var database = client.GetDatabase("NotesChat");
             _users = database.GetCollection<User>("users");
         }
-        
+
         public async Task<Either<List<User>, UserError>> GetAll()
         {
             IAsyncCursor<User> result;
@@ -40,7 +40,8 @@ namespace Identity.Managers
             try
             {
                 var id = Guid.NewGuid().ToString();
-                var user = new User {
+                var user = new User
+                {
                     Id = id,
                     Name = input.Name,
                     Password = input.Password,
@@ -89,11 +90,22 @@ namespace Identity.Managers
             }
         }
 
-        public async Task<UserError> DeleteOne(string userId)
+        public async Task<UserError> DeleteOne(string userId, HttpRequest request)
         {
             try
             {
-                var result = await _users.DeleteOneAsync(user => user.Id == userId);
+                await _users.DeleteOneAsync(user => user.Id == userId);
+
+                var cookies = new CookieContainer();
+                cookies.Add(new Uri("http://localhost/"), new Cookie("sessionId", sessionId));
+                var handler = new HttpClientHandler
+                {
+                    CookieContainer = cookies
+                };
+
+                var _httpClient = new HttpClient(handler);
+                _httpClient.DeleteAsync($"http://localhost/api/contacts/list");
+
                 return UserError.None;
             }
             catch
@@ -122,7 +134,7 @@ namespace Identity.Managers
     public struct User
     {
         [JsonPropertyName("id")]
-        public string Id {  get; set; }
+        public string Id { get; set; }
         [JsonPropertyName("name")]
         public string Name { get; set; }
         [JsonPropertyName("password")]

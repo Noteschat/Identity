@@ -22,19 +22,20 @@ namespace Identity.Controllers
         public async Task<dynamic> GetAll()
         {
             var user = await _sessions.getUserFromRequest(Request);
-            if(!user.IsSuccess)
+            if (!user.IsSuccess)
             {
                 switch (user.Error)
                 {
                     case SessionError.NotFound:
-                        return StatusCode(401, new { cause  = "not logged in" });
+                        return StatusCode(401, new { cause = "not logged in" });
                     default:
                         return StatusCode(500, new { cause = "retrieval failed" });
                 }
             }
             var users = await _users.GetAll();
             return users.Match<IActionResult>(
-                users => {
+                users =>
+                {
                     var response = users.Select(user => new UserResponseBody
                     {
                         Id = user.Id,
@@ -66,7 +67,7 @@ namespace Identity.Controllers
                 id => StatusCode(200, new { id }),
                 error =>
                 {
-                    switch(error)
+                    switch (error)
                     {
                         case UserError.UsernameAlreadyUsed:
                             return StatusCode(400, new { cause = "username already in use" });
@@ -82,7 +83,8 @@ namespace Identity.Controllers
         {
             var user = await _users.FindOne(userId);
             return user.Match<IActionResult>(
-                user => {
+                user =>
+                {
                     var response = new UserResponseBody
                     {
                         Id = user.Id,
@@ -90,8 +92,9 @@ namespace Identity.Controllers
                     };
                     return StatusCode(200, response);
                 },
-                error => {
-                    switch(error)
+                error =>
+                {
+                    switch (error)
                     {
                         case UserError.NotFound:
                             return StatusCode(404, new { cause = "user not found" });
@@ -107,7 +110,8 @@ namespace Identity.Controllers
         {
             var res = await _sessions.getUserFromRequest(Request);
             return res.Match<IActionResult>(
-                user => {
+                user =>
+                {
                     var response = new UserResponseBody
                     {
                         Id = user.Id,
@@ -115,7 +119,8 @@ namespace Identity.Controllers
                     };
                     return StatusCode(200, response);
                 },
-                error => {
+                error =>
+                {
                     switch (error)
                     {
                         case SessionError.NotFound:
@@ -134,7 +139,7 @@ namespace Identity.Controllers
             return await res.Match<ActionResult>(
                 async (user) =>
                 {
-                    var result = await _users.DeleteOne(user.Id);
+                    var result = await _users.DeleteOne(user.Id, Request);
                     switch (result)
                     {
                         case UserError.None:
@@ -145,7 +150,7 @@ namespace Identity.Controllers
                 },
                 async (error) =>
                 {
-                    switch(error)
+                    switch (error)
                     {
                         case SessionError.NotFound:
                             return StatusCode(401, new { cause = "not logged in" });
