@@ -49,7 +49,7 @@ namespace Identity.Managers
                 }
                 return new Either<Either<User, UserError>, SessionError>(SessionError.NotFound);
             }
-            catch (Exception ex)
+            catch
             {
                 return new Either<Either<User, UserError>, SessionError>(SessionError.NoDatabaseConnection);
             }

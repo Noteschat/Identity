@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
+using System.Net;
 using System.Text.Json.Serialization;
 
 namespace Identity.Managers
@@ -97,7 +98,7 @@ namespace Identity.Managers
                 await _users.DeleteOneAsync(user => user.Id == userId);
 
                 var cookies = new CookieContainer();
-                cookies.Add(new Uri("http://localhost/"), new Cookie("sessionId", sessionId));
+                cookies.Add(new Uri("http://localhost/"), new Cookie("sessionId", request.Cookies["sessionId"]));
                 var handler = new HttpClientHandler
                 {
                     CookieContainer = cookies
