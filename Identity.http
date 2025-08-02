@@ -23,3 +23,11 @@ Content-Type: application/json
 {
     "name": "Ad"
 }
+
+###
+GET http://localhost/api/identity/user/current
+Cookie: sessionId=79483aec-ccb4-4e12-b26e-4e5c09d0c0b7
+
+###
+GET http://localhost/api/identity/user
+Cookie: sessionId=79483aec-ccb4-4e12-b26e-4e5c09d0c0b7
