@@ -74,6 +74,19 @@ namespace Identity.Managers
             }
         }
 
+        public async Task<Either<List<User>, UserError>> FindAll(SearchBody userBody)
+        {
+            try
+            {
+                var result = (await _users.FindAsync(user => user.Name.Contains(userBody.Name))).ToList();
+                return new Either<List<User>, UserError>(result);
+            }
+            catch
+            {
+                return new Either<List<User>, UserError>(UserError.NoDatabaseConnection);
+            }
+        }
+
         public async Task<Either<User, UserError>> FindOne(string userId)
         {
             try
@@ -162,6 +175,12 @@ namespace Identity.Managers
     {
         [JsonPropertyName("id")]
         public string Id;
+    }
+
+    public struct SearchBody
+    {
+        [JsonPropertyName("name")]
+        public string Name { get; set; }
     }
 
     public enum UserError

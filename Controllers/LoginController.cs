@@ -58,7 +58,7 @@ namespace Identity.Controllers
                 },
                 async error =>
                 {
-                    switch(error)
+                    switch (error)
                     {
                         case UserError.NotFound:
                             return StatusCode(404, new { cause = "unknown user" });
