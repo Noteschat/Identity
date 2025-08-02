@@ -19,6 +19,7 @@ Content-Type: application/json
 ###
 POST http://localhost/api/identity/search
 Content-Type: application/json
+Cookie: sessionId=79483aec-ccb4-4e12-b26e-4e5c09d0c0b7
 
 {
     "name": "Ad"

@@ -74,11 +74,11 @@ namespace Identity.Managers
             }
         }
 
-        public async Task<Either<List<User>, UserError>> FindAll(SearchBody userBody)
+        public async Task<Either<List<User>, UserError>> FindAll(User searchingUser, SearchBody userBody)
         {
             try
             {
-                var result = (await _users.FindAsync(user => user.Name.Contains(userBody.Name))).ToList();
+                var result = (await _users.FindAsync(user => user.Name.Contains(userBody.Name) && user.Name != searchingUser.Name)).ToList();
                 return new Either<List<User>, UserError>(result);
             }
             catch

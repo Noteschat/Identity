@@ -10,15 +10,23 @@ namespace Identity.Controllers
     public class SearchController : Controller
     {
         private readonly UserManager _users;
+        private readonly SessionManager _sessions;
 
         public SearchController(UserManager userManager, SessionManager sessions)
         {
             _users = userManager;
+            _sessions = sessions;
         }
 
         [HttpPost]
         public async Task<dynamic> SearchAll()
         {
+            var userRes = await _sessions.getUserFromRequest(Request);
+            if (!userRes.IsSuccess)
+            {
+                return StatusCode(403, new { cause = "not authenticated" });
+            }
+
             string requestBody = await new StreamReader(Request.Body).ReadToEndAsync();
             SearchBody data;
 
@@ -30,7 +38,7 @@ namespace Identity.Controllers
             {
                 return StatusCode(400, new { cause = "missing body" });
             }
-            return (await _users.FindAll(data)).Match<ActionResult>(
+            return (await _users.FindAll(userRes.Success, data)).Match<ActionResult>(
                 users =>
                 {
                     var userRes = users.Select(user => new
