@@ -32,3 +32,7 @@ Cookie: sessionId=79483aec-ccb4-4e12-b26e-4e5c09d0c0b7
 ###
 GET http://localhost/api/identity/user
 Cookie: sessionId=79483aec-ccb4-4e12-b26e-4e5c09d0c0b7
+
+###
+GET http://localhost/api/identity/user/313f44a0-40de-4f49-b2c9-9d4fc7ca0260
+Cookie: sessionId=79483aec-ccb4-4e12-b26e-4e5c09d0c0b7
